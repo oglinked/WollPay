@@ -1,10 +1,11 @@
 """CSV file's field edit programm.
-(csvedit.py Version.00.04).
+(csvedit.py Version.00.05).
 """
 
 import csv
 import os
 import inputvalid as iv
+import helpimport as hi
 
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
@@ -92,29 +93,54 @@ def valid_index_input(number, max_number, min_number=1):
     return number  
 
 
-def choose_path():
-    """Choosing (CSV) file in current directory
-    and getting relative path to it.
+# def choose_path():
+#     """Choosing (CSV) file in current directory
+#     and getting relative path to it.
+#     """
+#     files_number = len(list_files())
+#     if files_number >= 2:
+#         print(f'\nThere are {files_number} CSV files in \
+# current directory.\n')
+#         for i, file in enumerate(list_files(), start=1):
+#             print(i, '\t', file)
+#         k = input(f'\nInput the file ordinal number you are going to edit. \
+#                     \nPlease get the number in [1, {files_number}]: ')
+#         k = valid_index_input(k, files_number)  # Validation.
+#         # k  <class int>
+#         file_path = './' + list_files()[k-1]
+#     elif files_number == 1:
+#         file_path = './' + list_files()[0]
+#     else:
+#         input('\nError: No CSV files in current directory! \
+#               \nPlease upload CSV file you going to edit \
+# in current directory. \nPress "ENTER" to continue: ')
+#         file_path = choose_path()  # Recursion.
+#     return file_path
+
+
+def choose_path(file_extension=".csv"):
+    """Choosing file with dedicated extention in current directory and getting relative path to it.
     """
-    files_number = len(list_files())
+    files_number = len(list_files(file_extension))
     if files_number >= 2:
-        print(f'\nThere are {files_number} CSV files in \
+        print(f'\nThere are {files_number} {file_extension} files in \
 current directory.\n')
-        for i, file in enumerate(list_files(), start=1):
+        for i, file in enumerate(list_files(file_extension), start=1):
             print(i, '\t', file)
-        k = input(f'\nInput the file serial number you are going to edit. \
-                    \nPlease get the number in [1, {files_number}]: ')
+        k = input(f'\nInput the file ordinal number you are going \
+to work with. \nPlease get the number in [1, {files_number}]: ')
         k = valid_index_input(k, files_number)  # Validation.
         # k  <class int>
-        file_path = './' + list_files()[k-1]
+        file_path = './' + list_files(file_extension)[k-1]
     elif files_number == 1:
-        file_path = './' + list_files()[0]
+        file_path = './' + list_files(file_extension)[0]
     else:
-        input('\nError: No CSV files in current directory! \
-              \nPlease upload CSV file you going to edit \
-in current directory. \nPress "ENTER" to continue: ')
-        file_path = choose_path()  # Recursion.
+        input(f'\nError: No {file_extension} files in current directory! \
+              \nPlease upload {file_extension} file you are going to \
+work with in current directory. \nPress "ENTER" to continue: ')
+        file_path = choose_path(file_extension)  # Recursion.
     return file_path
+
 
 
 def list_files(file_extension=".csv"):
@@ -200,7 +226,11 @@ def csvedit():
 
         # The Greeting & information.
         print('\nHello Host! \
-              \nYou run version 00.04 of the program csvedit.py.')
+              \nYou run version 00.05 of the program csvedit.py.')
+        
+        result = hi.help_import()  # The ability to go back in main menu.
+        if result == 'Exit': return result
+        else: pass
 
         file_path = choose_path()
 
@@ -239,7 +269,7 @@ in CSV file? \n(Press "q" to exit, or "ENTER" to continue): ')
         n = iv.exit_test(n)  # Validation.
 
     input('Press "ENTER" to exit csvedit.py: ')  # Exit.
-    return
+    return result
 
 
 if __name__ == "__main__":

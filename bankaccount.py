@@ -1,13 +1,13 @@
 """ WollPay Bank Account Details
-(Version 01.04 of bankaccount.py).
+(Version 01.05 of bankaccount.py).
 """
 
 import os
 import inputvalid as iv
 from phonevalid import empty_phone_number
-from cidvalid import cid_validation
 from datevalid import get_date
 from csvwrite import csv_write
+import helpimport as hi
 
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
@@ -16,23 +16,29 @@ account_details_path = './bank_account_details.csv'
 time_zone = 'GMT+2'  # Time zone for Poland.
 
 
-def account():
+def bankaccount():
     """Wollpay clients' bank accounts details."""
     # The clients' input loop.
     i = 'y'
     while i != 'q':
         os.system('cls')  # Clearing the Screen.
+        
         # The Greeting & information.
-        print('Hello Host! \nYou run version 01.04 of the program \
+        print('Hello Host! \nYou run version 01.05 of the program \
 bankaccount.py.')
-        print('Enter data for a new client account.')
+        
+        result = hi.help_import()  # The ability to go back in main menu.
+        if result == 'Exit': return result
+        else: pass
+
+        print('\nEnter data for a new client account.')
         print('\nFull Path to bank_account_details.csv file is: \n'
               + os.path.abspath(account_details_path)
               + '\n')
 
         # The Input Data Block with partly Validation.
         cid = input('CID: ')
-        cid = cid_validation(cid)
+        cid = iv.cid_checking('CID', cid)
 
         bank_name = input('BankName: ')
         bank_name = iv.remove_cyrillic_and_tabs(bank_name, message_cyrillic)
@@ -48,8 +54,9 @@ bankaccount.py.')
         currency = iv.currency_validation(currency)
 
         account_number = input('AccountNumber: ')
-        account_number = iv.remove_cyrillic_and_tabs(account_number,
+        account_number = iv.test_cyr_tabs_whitespaces(account_number,
                                                      message_cyrillic)
+        account_number = account_number.upper()
 
         card_number = input('CardNumber: ')
         card_number = iv.valid_decimal(card_number)
@@ -68,8 +75,9 @@ bankaccount.py.')
                                                      message_cyrillic)
 
         swift_code = input('SWIFTCODE: ')
-        swift_code = iv.remove_cyrillic_and_tabs(swift_code,
+        swift_code = iv.test_cyr_tabs_whitespaces(swift_code,
                                                  message_cyrillic)
+        swift_code = swift_code.upper()
 
         sort_code = input('SORTCODE: ')
         sort_code = iv.remove_cyrillic_and_tabs(sort_code,
@@ -146,8 +154,8 @@ or "ENTER" to continue): ')
         i = iv.exit_test(i)
 
     input('Press "ENTER" to exit bankaccount.py: ')  # Exit.
-    return
+    return result
 
 
 if __name__ == "__main__":
-    account()
+    bankaccount()

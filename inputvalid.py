@@ -23,7 +23,7 @@ def cyrillic_presence_test(string, message=message_latin):
 def remove_tabs(string):
     """Code to remove tabulation."""
     if '\t' in string:
-        print('Warning: Inputted Tabs characters were removed!')
+        print('Warning: Tabs characters were removed!')
     return string.replace('\t', '')
 
 
@@ -49,10 +49,20 @@ def remove_cyrillic_and_tabs(string, message=message_latin):
     return string
 
 
+def test_cyr_tabs_whitespaces(string, message=message_latin):
+    """The Function checks for the presence of Cyrillic and 
+    removes tabs and whitespaces.
+    """
+    string = cyrillic_presence_test(string, message)
+    string = remove_tabs(string)
+    string = remove_whitespaces(string)
+    return string
+
+
 def remove_whitespaces(string):
     """Code to remove whitespaces."""
     if ' ' in string:
-        print('Warning: Inputted whitespaces were removed!')
+        print('Warning: Whitespaces were removed!')
     return string.replace(' ', '')
 
 
@@ -68,8 +78,7 @@ def str_valid_to_upper(string):
     Capital letters only. No numbers.
     string - parameter (Input string to validation).
     """
-    string = cyrillic_presence_test(string, message_cyrillic)
-    string = remove_tabs(string)
+    string = remove_cyrillic_and_tabs(string, message_cyrillic)
     modified_string = remove_whitespaces(string)
     # if string.isalpha():
     if modified_string.isalpha():    
@@ -77,8 +86,7 @@ def str_valid_to_upper(string):
     else:
         print('Error: Only Latin letters are allowed in this field!')
         string = input('Repeat input: ')
-        string = cyrillic_presence_test(string, message_cyrillic)
-        string = remove_tabs(string)
+        string = remove_cyrillic_and_tabs(string, message_cyrillic)
         string = str_valid_to_upper(string)  # Recursion.
     string = string.upper()
     return string
@@ -87,18 +95,16 @@ def str_valid_to_upper(string):
 def valid_decimal(number, sign_control='0'):  # Now sign control is "off".
     """ "number" validation function.
     Checks what decimal digits are allowed for "number".
-    number - parameter (Input string to validation).
-    number -> <class 'str'>
-    sign_control -> parameter (what decimal digits 
-    are allowed for "number").
-    sign_control = 0 -> Sign control is "off",
-    Only decimal digits >= 0 are allowed;
-                 = 1 -> 
-    Only decimal digits > 0 are allowed.
+        number - parameter (Input string to validation).
+        number - <class 'str'>
+        sign_control -> parameter (what decimal digits 
+                        are allowed for "number").
+        sign_control = 0 -> Sign control is "off",
+                            Only decimal digits >= 0 are allowed;
+        sign_control = 1 -> Only decimal digits > 0 are allowed.
     """
     sign_control = str(sign_control)
-    number = cyrillic_presence_test(number, message_cyrillic)
-    number = remove_tabs_and_whitespaces(number)
+    number = test_cyr_tabs_whitespaces(number, message_cyrillic)
     # The ability to leave the field empty.
     i = 'y'
     if number in ['']:
@@ -131,14 +137,51 @@ in this field!')
 
 
 def isfloat(number):
-    """Python Program to Check If a String Is a Number (Float)"""
-    number = cyrillic_presence_test(number, message_cyrillic)
-    number = remove_tabs_and_whitespaces(number)
+    """Python Program to Check If a String Is a Number (Float)."""
+    number = test_cyr_tabs_whitespaces(number, message_cyrillic)
     try:
         float(number)
         return True
     except ValueError:
         return False
+
+
+def empty_field_denied(string, sign_control):
+    """This function denied empty field input."""
+    if string in ['']:
+        print('Error: It\'s denied to leave this field empty.')
+        string = input('Repeat Input: ')
+        string = amount_checking(string, sign_control)  # !!
+    else: pass
+    return str(string)
+
+
+def amount_checking(string, sign_control='1'):
+    """    """
+    string = empty_field_denied(string, sign_control)
+    string = valid_number(string, sign_control)
+    string = empty_field_denied(string, sign_control)
+    return str(string)
+
+
+def cid_checking(name, string, sign_control='0'):
+    """CID validation function. It's new approach."""
+    string = empty_cid_denied(name, string, sign_control)
+    string = valid_decimal(string, sign_control)
+    string = empty_cid_denied(name, string, sign_control)
+    return str(string)
+
+
+def empty_cid_denied(name, string, sign_control):
+    """This function denied empty field input.
+    For CID only.
+    """
+    if string in ['']:
+        print('Error: It\'s denied to leave this field empty.')
+        string = input(f'Repeat "{name}" Input: ')
+        string = cid_checking(name, string, sign_control)  # !!
+    else: pass
+    return str(string)
 
 
 def valid_number(number, sign_control='0'):
@@ -153,8 +196,7 @@ def valid_number(number, sign_control='0'):
                  = 2 --> Only numbers >= 0 are allowed.
     """
     sign_control = str(sign_control)
-    number = cyrillic_presence_test(number, message_cyrillic)
-    number = remove_tabs_and_whitespaces(number)
+    number = test_cyr_tabs_whitespaces(number, message_cyrillic)
     # The ability to leave the field empty.
     i = 'y'
     if number in ['']:
@@ -171,8 +213,8 @@ def valid_number(number, sign_control='0'):
     elif isfloat(number) or number in ['']:  # Float validation.
         pass
     else:
-        print('Error: Only decimal digits (and one dot for <class "float"> \
-are allowed in this field!')
+        print('Error: Only decimal digits (and one dot for \
+<class \'float\'> are allowed in this field!')
         number = input('Repeat input: ')
         number = valid_number(number, sign_control)  # Recursion.
     # Sign control block.
@@ -194,13 +236,22 @@ in this field!')
             number = valid_number(number, sign_control)  # Recursion.  
     else: pass
     # The END of sign control block.
+    number = dash_signs_removing(number)  # No '-' in number allowed.
     return str(number)
+
+
+def dash_signs_removing(string):
+    """Code to remove dash signs."""
+    string = str(string)
+    if '-' in string:
+        print('Warning: Inputted dash signs were removed!')
+    else: pass
+    return string.replace('-', '')
 
 
 def yes_or_no(string):
     """Only "y","Y" or "n","N" are allowed."""
-    string = cyrillic_presence_test(string, message_cyrillic)
-    string = remove_tabs_and_whitespaces(string)
+    string = test_cyr_tabs_whitespaces(string, message_cyrillic)
     if string in ['y', 'Y']:
         string = 'Y'
     elif string in ['n', 'N']:
@@ -214,8 +265,7 @@ def yes_or_no(string):
 
 def currency_validation(currency):
     """Checks if the currency's input was right."""
-    currency = cyrillic_presence_test(currency, message_cyrillic)
-    currency = remove_tabs_and_whitespaces(currency)
+    currency = test_cyr_tabs_whitespaces(currency, message_cyrillic)
     if len(currency) < 1:  # Minimum 1 character should be present.
         print('Error: Too few characters were inputted!')
         currency = input('Repeat Input: ')
@@ -236,8 +286,7 @@ def amount_validation(amount, sign_control=0):  # Function not in use!!!
                  = 2 --> Only numbers >= 0 are allowed.
     """
     sign_control = str(sign_control)
-    amount = cyrillic_presence_test(amount, message_cyrillic)
-    amount = remove_tabs(amount)
+    amount = remove_cyrillic_and_tabs(amount, message_cyrillic)
     if len(amount) < 1:  # Minimum 1 character should be present.
         print('Error: Too few characters were inputted.')
         amount = input('Repeat Input: ')
@@ -248,8 +297,7 @@ def amount_validation(amount, sign_control=0):  # Function not in use!!!
 
 def exit_test(i):
     """Exit or continue validation test."""
-    i = cyrillic_presence_test(i, message_cyrillic)
-    i = remove_tabs_and_whitespaces(i)
+    i = test_cyr_tabs_whitespaces(i, message_cyrillic)
     if i in ['q', '']:
         pass
     else:
@@ -261,9 +309,7 @@ def exit_test(i):
 
 def one_or_zero(string):
     """Only "1" or "0" are valid values to input parameter."""
-    string = cyrillic_presence_test(string,
-                                    message_cyrillic)
-    string = remove_tabs_and_whitespaces(string)
+    string = test_cyr_tabs_whitespaces(string, message_cyrillic)
     if string in ["1", "0"]:
         pass
     else:
@@ -278,8 +324,7 @@ def number_validation(number, max_number, min_number=1):
     """Number validation (integer 
     in interval [min_number, max_number]).
     """
-    number = cyrillic_presence_test(number, message_cyrillic)
-    number = remove_tabs_and_whitespaces(number)
+    number = test_cyr_tabs_whitespaces(number, message_cyrillic)
 
     if number.isdigit():  # Only decimal digits.
         # Removing leading 0...0 from String "number".
@@ -307,14 +352,14 @@ in [{min_number}, {max_number}].')
 
 def choose_item(item_name, item_menu, control=0):
     """Drop-down menu analog."""
-    print(f'\nThe {item_name} menu Table: \n')  # Table's title.
+    print(f'\nThe {item_name} menu Table is: \n')  # Table's title.
     for i, item in enumerate(item_menu, start=1):
         if control == 0:
             print(i, item)
         elif control == 1:
             print(i, item, end='')
         else: pass
-    number = input('\nChoose and Input the serial number: ')
+    number = input('\nChoose and Input the ordinal number: ')
     number = number_validation(number, len(item_menu))  # Validation.
     number = int(number)
     if item_name == 'Source':
@@ -328,8 +373,7 @@ def empty_field(field):  # ??
     "Enter", make the program ask me if I really want
     to leave this field empty y/n?.
     """
-    field = cyrillic_presence_test(field, message_cyrillic)
-    field = remove_tabs_and_whitespaces(field)  # Remove "\t" and " ".
+    field = test_cyr_tabs_whitespaces(field, message_cyrillic)
     if field == '':
         field = force_empty_field(field)
     else:
@@ -341,8 +385,7 @@ def force_empty_field(field):  # ???
     """Empty (or ...) field's value."""
     result = False
     result = input('Do you really want to leave this field empty (y/n)?: ')
-    result = cyrillic_presence_test(result, message_cyrillic)
-    result = remove_tabs(result)
+    result = remove_cyrillic_and_tabs(result, message_cyrillic)
     if result in ['y', 'Y', '']:
         field = ''
     else:

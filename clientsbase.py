@@ -1,11 +1,11 @@
-""" WollPay Clients Base (Version 01.04 of the clientsbase.py). """
+""" WollPay Clients Base (Version 01.05 of the clientsbase.py). """
 
 import os
 import inputvalid as iv
 from phonevalid import empty_phone_number
-from cidvalid import cid_validation
 from datevalid import get_date
 from csvwrite import csv_write, file_read
+import helpimport as hi
 
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
@@ -40,17 +40,23 @@ def clientsbase():
     i = 'y'
     while i != 'q':
         os.system('cls')  # Clearing the Screen.
+        
         # The Greeting & information.
-        print('Hello Host! \nYou run version 01.04 of the \
+        print('Hello Host! \nYou run version 01.05 of the \
 clientsbase.py program.')
-        print('Input the Data of the new Client.')
+        
+        result = hi.help_import()  # The ability to go back in main menu.
+        if result == 'Exit': return result
+        else: pass
+
+        print('\nInput the Data of the new Client.')
         print('\nFull Path to the clients_base.csv file is: \n'
               + os.path.abspath(base_path)
               + '\n')
 
         # The Input Data Block with partly Validation.
         cid = input('CID: ')
-        cid = cid_validation(cid)
+        cid = iv.cid_checking('CID', cid)
 
         first_name = input('FirstName: ')
         first_name = iv.remove_cyrillic_and_tabs(first_name,
@@ -81,8 +87,11 @@ clientsbase.py program.')
         type3 = iv.choose_item('Type3', type_3)
         entity = iv.choose_item('Entity', entity_list)
 
-        dependent = input('Dependent: ')
-        dependent = iv.valid_decimal(dependent)
+        if type2 == 'Dependent':
+            dependent = input('Dependent: ')
+            dependent = iv.cid_checking('Dependent', dependent)
+        else:
+            dependent = ''
 
         base_currency = input('BaseCurrency: ')
         base_currency = iv.currency_validation(base_currency)
@@ -197,7 +206,7 @@ or "ENTER" to continue): ')
         i = iv.exit_test(i)
 
     input('Press "ENTER" to exit clientsbase.py: ')  # Exit.
-    return
+    return result
 
 
 if __name__ == "__main__":
