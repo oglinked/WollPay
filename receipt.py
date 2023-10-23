@@ -1,4 +1,4 @@
-""" WollPay Receipt (Version 04.04 of receipt.py program). """
+""" WollPay Receipt (Version 04.05 of receipt.py program). """
 
 import random
 import datetime
@@ -7,9 +7,9 @@ import os
 import inputvalid as iv
 import receiptoutput as ro
 from calc import rate_calculating
-from cidvalid import cid_validation
 from datevalid import get_date
 from csvwrite import csv_write
+import helpimport as hi
 
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
@@ -17,51 +17,70 @@ log_path = './log.csv'  # The relative path to log.csv file.
 txt_path = './receipt.txt'  # The relative path to receipt.txt file.
 time_zone = 'GMT+2'  # Time zone for Poland.
 
+entry_time_zone = time_zone
+entry_time = datetime.datetime.now(pytz.timezone('Poland')) \
+            .strftime('%I:%M %p')
+entry_date = datetime.datetime.now(pytz.timezone('Poland')) \
+            .strftime("%m/%d/%Y")
+
 
 def receipt():
     """The receipt() function."""
     # The transactions loop.
     i = 'y'
     while i != 'q':
+
         os.system('cls')  # Clearing the Screen.
 
         # The Greeting & information.
         print('\nHello Host! \
-\nYou run version 04.04 of the program receipt.py.')
-        print('Please input the Data of the new Transaction.')
+\nYou run version 04.05 of the program receipt.py.') 
+               
+        result = hi.help_import()  # The ability to go back in main menu.
+        if result == 'Exit': return result
+        else: pass
+
+        print('\nInput new Transaction Data.')
         print('\nFull Path to log.csv file is: \n'
-              + os.path.abspath(log_path)
-              + '\n')
+              + os.path.abspath(log_path))
         print('Full Path to receipt.txt file is: \n'
               + os.path.abspath(txt_path)
               + '\n')
 
+        # The Transaction's random ID calculating.
+        transaction_ID = random.randint(0, 999999999999)
+        transaction_ID = str(transaction_ID).zfill(12)
+        print(f'The "TID" of current Transaction is: {transaction_ID} \
+              \nPlease input Transaction\'s Data:\n')
+        
         # The Input Data Block with partly Validation.
         cid = input('CID: ')
-        cid = cid_validation(cid)
+        cid = iv.cid_checking('CID', cid)
 
         input_currency = input('Currency IN: ')
         input_currency = iv.remove_tabs_and_whitespaces(input_currency)
         input_currency = iv.currency_validation(input_currency)
 
         input_summ = input('Amount IN: ')
-        input_summ = iv.valid_number(input_summ, 1)
+        input_summ = iv.amount_checking(input_summ)
 
         output_currency = input('Currency OUT: ')
         output_currency = iv.remove_tabs_and_whitespaces(output_currency)
         output_currency = iv.currency_validation(output_currency)
 
         output_summ = input('Amount OUT: ')
-        output_summ = iv.valid_number(output_summ, 1)
-
+        output_summ = iv.amount_checking(output_summ)
+        
         comment = input('Comment: ')
         comment = iv.remove_cyrillic_and_tabs(comment, message_cyrillic)
 
         cash_in = input('Cash Registrar IN: ')
         cash_in = iv.valid_number(cash_in, 2)
+        cash_in = ro.float_to_int(cash_in)
 
         cash_out = input('Cash Registrar OUT: ')
         cash_out = iv.valid_number(cash_out, 2)
+        cash_out = ro.float_to_int(cash_out)
 
         new_client_data = input('New data about client: ')
         new_client_data = iv.remove_cyrillic_and_tabs(new_client_data,
@@ -78,11 +97,7 @@ def receipt():
         general2 = iv.remove_cyrillic_and_tabs(general2, message_cyrillic)
 
         # The calculating of the rate.
-        rate = rate_calculating(input_summ, output_summ)
-
-        # The Transaction's random ID calculating.
-        transaction_ID = random.randint(0, 999999999999)
-        transaction_ID = str(transaction_ID).zfill(12)
+        rate = rate_calculating(input_summ, output_summ)        
 
         # Current Date & Time getting (for Poland).
         current_time = datetime.datetime.now(pytz.timezone('Poland')) \
@@ -129,6 +144,9 @@ def receipt():
             'CashRegistrarOUT',
             'NewData',
             'Covered',
+            'EntryAddedDate',
+            'EntryAddedTime',
+            'EntryAddedTimeZone',
             'General1',
             'General2'
         ]
@@ -152,6 +170,9 @@ def receipt():
             cash_out,
             new_client_data,
             covered,
+            entry_date,
+            entry_time,
+            entry_time_zone,
             general1,
             general2
         ]
@@ -165,7 +186,7 @@ or "ENTER" to continue): ')
         i = iv.exit_test(i)
 
     input('Press "ENTER" to exit receipt.py: ')  # Exit.
-    return
+    return result
 
 
 if __name__ == "__main__":

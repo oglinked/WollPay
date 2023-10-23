@@ -1,10 +1,13 @@
-"""wollpay.py version 00.04 is main program."""
+"""wollpay.py (version 00.05) is programmes' Hub.
+To run wollpay.py you should run startpay.py program.
+"""
 
 import os
+import sys
 import inputvalid as iv
 from receipt import receipt
 from clientsbase import clientsbase
-from bankaccount import account
+from bankaccount import bankaccount
 from csvedit import csvedit
 
 menu_list = [
@@ -17,14 +20,14 @@ menu_list = [
 
 
 def wollpay():
-    """The Main program."""
+    """The programmes' Hub function."""
     # The input loop.
     i = 'y'
     while i != 'q':
         os.system('cls')  # Clearing the Screen.
         # The Greeting & information.
         print('\nHello Host! \
-    \nYou run version 00.04 of the program wollpay.py. \
+    \nYou run version 00.05 of the program wollpay.py. \
     \nWhat do you prefer to do?')
 
         item = iv.choose_item('\"What to do\"', menu_list)
@@ -34,7 +37,7 @@ def wollpay():
         elif item == menu_list[1]:
             clientsbase()
         elif item == menu_list[2]:
-            account()
+            bankaccount()
         elif item == menu_list[3]:
             csvedit()
         else:
@@ -46,6 +49,7 @@ def wollpay():
         i = iv.exit_test(i)
 
     input('Press "ENTER" to exit wollpay.py: ')  # Exit.
+    sys.exit(input('Good Job. Well done!! \nPress "ENTER": '))
     return
 
 

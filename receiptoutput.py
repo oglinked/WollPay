@@ -22,9 +22,14 @@ def cli_receipt(items):
           float_to_int(input_summ, 2),
           '-->',
           output_currency,
-          float_to_int(output_summ, 2))
+          float_to_int(output_summ, 2)
+          )
     print('Date:           ', current_date)
-    print('Time:           ', current_time, '(' + time_zone + ')')
+    print('Time:           ', current_time, 
+          '(' 
+          + time_zone 
+          + ')'
+          )
     print('TransactionID:  ', transaction_ID)
     print('Rate:           ', rate)
     print('\nThank you for being a WollPay customer!')
@@ -56,10 +61,16 @@ def txt_receipt(items):
                 + ' --> '
                 + output_currency
                 + ' '
-                + output_summ)
+                + output_summ
+                )
         f.write('\nDate:           ' + current_date)
-        f.write('\nTime:           ' + current_time
-                + ' ' + '(' + time_zone + ')')
+        f.write('\nTime:           ' 
+                + current_time
+                + ' ' 
+                + '(' 
+                + time_zone 
+                + ')'
+                )
         f.write('\nTransactionID:  ' + transaction_ID)
         f.write('\nRate:           ' + rate)
         f.write('\n\nThank you for being a WollPay customer!\n')
@@ -71,12 +82,16 @@ def float_to_int(item, decimal_places=2):
     """This function convert 'float' with .00
     to 'int' and return as 'str'.
     """
-    item = float(item)
-    item = truncate_float(item, decimal_places)
-    item = str(item)
-    if item.split('.')[1] in ['0','00','000','0000']:
-        return item.split('.')[0]  # <class 'str'>
-    else: return item  # <class 'str'>
+    if item in ['','y','Y','yes','Yes','YES']:
+        item = ''
+    else:
+        item = float(item)
+        item = truncate_float(item, decimal_places)
+        item = str(item)
+        if item.split('.')[1] in ['0','00','000','0000','00000','000000']:
+            item =  item.split('.')[0]  # <class 'str'>
+        else: pass
+    return item  # <class 'str'>
 
 
 def truncate_float(float_number, decimal_places=2):
