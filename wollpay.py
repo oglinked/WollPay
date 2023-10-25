@@ -1,4 +1,4 @@
-"""wollpay.py (version 00.05) is programmes' Hub.
+"""wollpay.py (version 00.06) is programmes' Hub.
 To run wollpay.py you should run startpay.py program.
 """
 
@@ -9,12 +9,14 @@ from receipt import receipt
 from clientsbase import clientsbase
 from bankaccount import bankaccount
 from csvedit import csvedit
+from balance import balance
 
 menu_list = [
         'To make a receipt for the new transaction?',
         'To append clients base with the new client?',
         'To append banks accounts data of the WollPay clients?',
         'To edit one of your CSV files?',
+        'To calculate intermediate balance?',
         'Exit!'
     ]
 
@@ -27,7 +29,7 @@ def wollpay():
         os.system('cls')  # Clearing the Screen.
         # The Greeting & information.
         print('\nHello Host! \
-    \nYou run version 00.05 of the program wollpay.py. \
+    \nYou run version 00.06 of the program wollpay.py. \
     \nWhat do you prefer to do?')
 
         item = iv.choose_item('\"What to do\"', menu_list)
@@ -40,6 +42,8 @@ def wollpay():
             bankaccount()
         elif item == menu_list[3]:
             csvedit()
+        elif item == menu_list[4]:
+            balance()
         else:
             pass
 
