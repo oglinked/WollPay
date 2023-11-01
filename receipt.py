@@ -1,8 +1,7 @@
-""" WollPay Receipt (Version 04.05 of receipt.py program). """
+""" WollPay Receipt (Version 04.06 of receipt.py program). """
 
 import random
 import datetime
-import pytz
 import os
 import inputvalid as iv
 import receiptoutput as ro
@@ -15,13 +14,22 @@ message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
 log_path = './log.csv'  # The relative path to log.csv file.
 txt_path = './receipt.txt'  # The relative path to receipt.txt file.
-time_zone = 'GMT+2'  # Time zone for Poland.
 
-entry_time_zone = time_zone
-entry_time = datetime.datetime.now(pytz.timezone('Poland')) \
+# Getting current Date, Time and local TimeZone from inet:
+local_time_zone = datetime.datetime.now(datetime.UTC) \
+.astimezone().strftime("UTC%z")[:-2]
+entry_time_zone = local_time_zone
+entry_time = datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime('%I:%M %p')
-entry_date = datetime.datetime.now(pytz.timezone('Poland')) \
+entry_date = datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y")
+
+# time_zone = 'GMT+2'  # Time zone for Poland.
+# entry_time_zone = time_zone
+# entry_time = datetime.datetime.now(pytz.timezone('Poland')) \
+#             .strftime('%I:%M %p')
+# entry_date = datetime.datetime.now(pytz.timezone('Poland')) \
+#             .strftime("%m/%d/%Y")
 
 
 def receipt():
@@ -34,7 +42,7 @@ def receipt():
 
         # The Greeting & information.
         print('\nHello Host! \
-\nYou run version 04.05 of the program receipt.py.') 
+\nYou run version 04.06 of the program receipt.py.') 
                
         result = hi.help_import()  # The ability to go back in main menu.
         if result == 'Exit': return result
@@ -48,12 +56,13 @@ def receipt():
               + '\n')
 
         # The Transaction's random ID calculating.
-        transaction_ID = random.randint(0, 999999999999)
-        transaction_ID = str(transaction_ID).zfill(12)
-        print(f'The "TID" of current Transaction is: {transaction_ID} \
-              \nPlease input Transaction\'s Data:\n')
+        # transaction_ID = random.randint(0, 999999999999)
+        # transaction_ID = str(transaction_ID).zfill(12)
+        transaction_ID = random.randint(100000000000, 999999999999)
+        transaction_ID = str(transaction_ID)
+        print(f'TID: {transaction_ID}')
         
-        # The Input Data Block with partly Validation.
+        # The Input Data Block with partly Validation:
         cid = input('CID: ')
         cid = iv.cid_checking('CID', cid)
 
@@ -99,8 +108,8 @@ def receipt():
         # The calculating of the rate.
         rate = rate_calculating(input_summ, output_summ)        
 
-        # Current Date & Time getting (for Poland).
-        current_time = datetime.datetime.now(pytz.timezone('Poland')) \
+        # Current Date & Time getting.
+        current_time = datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime('%I:%M %p')
 
         # Input the current date manualy or get from Inet.
@@ -115,7 +124,7 @@ def receipt():
             output_summ,
             current_date,
             current_time,
-            time_zone,
+            local_time_zone,
             transaction_ID,
             rate
         ]
@@ -156,7 +165,7 @@ def receipt():
             transaction_ID,
             current_date,
             current_time,
-            time_zone,
+            local_time_zone,
             cid,
             input_currency,
             # input_summ,
