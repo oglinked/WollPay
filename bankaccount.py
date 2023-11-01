@@ -13,7 +13,6 @@ message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
 # The relative path to the bank_account_details.csv file.
 account_details_path = './bank_account_details.csv'
-time_zone = 'GMT+2'  # Time zone for Poland.
 
 
 def bankaccount():
@@ -36,7 +35,7 @@ bankaccount.py.')
               + os.path.abspath(account_details_path)
               + '\n')
 
-        # The Input Data Block with partly Validation.
+        # The Input Data Block with partly Validation:
         cid = input('CID: ')
         cid = iv.cid_checking('CID', cid)
 

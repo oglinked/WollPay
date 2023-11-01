@@ -3,6 +3,7 @@ The validating inputed values.
 """
 
 import re
+from cidvalid import cid_validation
 
 message_latin = 'Only Latin letters are allowed in this field!'
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
@@ -167,7 +168,8 @@ def amount_checking(string, sign_control='1'):
 def cid_checking(name, string, sign_control='0'):
     """CID validation function. It's new approach."""
     string = empty_cid_denied(name, string, sign_control)
-    string = valid_decimal(string, sign_control)
+    # string = valid_decimal(string, sign_control)  # Only decimal digitds.
+    string = cid_validation(string)  # Latin letters and decimal digits only.
     string = empty_cid_denied(name, string, sign_control)
     return str(string)
 
@@ -195,8 +197,16 @@ def valid_number(number, sign_control='0'):
                  = 1 --> Only numbers > 0 are allowed;
                  = 2 --> Only numbers >= 0 are allowed.
     """
+    # Clearing the Input:
+    number = str(number)
     sign_control = str(sign_control)
     number = test_cyr_tabs_whitespaces(number, message_cyrillic)
+    if '_' in number:
+        number = input('Error: "_" sign is not allowed! \
+Repeat input: ')
+        number = valid_number(number, sign_control)  # Recursion.
+    else: pass
+
     # The ability to leave the field empty.
     i = 'y'
     if number in ['']:
@@ -208,6 +218,7 @@ def valid_number(number, sign_control='0'):
             number = valid_number(number, sign_control)  # Recursion.
     else: pass
     # The end of such ability.
+
     if number.isdecimal() or number in ['']:  # Decimal validation.
         pass
     elif isfloat(number) or number in ['']:  # Float validation.
@@ -217,6 +228,7 @@ def valid_number(number, sign_control='0'):
 <class \'float\'> are allowed in this field!')
         number = input('Repeat input: ')
         number = valid_number(number, sign_control)  # Recursion.
+
     # Sign control block.
     if sign_control in ['1'] and number not in ['']:
         number = float(number)  # str --> float
@@ -236,6 +248,7 @@ in this field!')
             number = valid_number(number, sign_control)  # Recursion.  
     else: pass
     # The END of sign control block.
+
     number = dash_signs_removing(number)  # No '-' in number allowed.
     return str(number)
 
@@ -244,7 +257,7 @@ def dash_signs_removing(string):
     """Code to remove dash signs."""
     string = str(string)
     if '-' in string:
-        print('Warning: Inputted dash signs were removed!')
+        print('Warning: Dash "-" sign(s) was(were) removed!')
     else: pass
     return string.replace('-', '')
 

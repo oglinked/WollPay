@@ -1,9 +1,7 @@
 """datevalid.py"""
 
 import datetime
-import pytz
-from inputvalid import cyrillic_presence_test, remove_tabs_and_whitespaces, \
-    remove_tabs, check_letters
+from inputvalid import test_cyr_tabs_whitespaces, check_letters
 
 message_cyrillic = 'No cyrillic letters are allowed in this field!'
 
@@ -13,8 +11,7 @@ def empty_date(date):
     "Enter", make the program ask me if I really want
     to leave this field empty y/n?.
     """
-    date = cyrillic_presence_test(date, message_cyrillic)
-    date = remove_tabs_and_whitespaces(date)  # Removing "\t" and " ".
+    date = test_cyr_tabs_whitespaces(date, message_cyrillic)
     if date in ['']:
         date = force_empty_date(date)
     else:
@@ -26,11 +23,10 @@ def force_empty_date(date):
     """Empty (or current) date."""
     # result = input('Do you really want to leave this field empty (y/n)?: ')
     result = input('Do you want to get current date to this field (y/n)?: ')
-    result = cyrillic_presence_test(result, message_cyrillic)
-    result = remove_tabs_and_whitespaces(result)  # Removing "\t" and " ".
+    result = test_cyr_tabs_whitespaces(result, message_cyrillic)
     if result in ['y', 'Y', '']:
         # date = '' # Empty field.
-        date = datetime.datetime.now(pytz.timezone('Poland')) \
+        date = datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y")  # Getting current date.
     else:
         date = date_validation(date)
@@ -41,8 +37,7 @@ def date_validation(date):
     """ Date validation.
     date - parameter (Inputed date to validation).
     """
-    date = cyrillic_presence_test(date, message_cyrillic)
-    date = remove_tabs_and_whitespaces(date)  # Removing "\t" and " ".
+    date = test_cyr_tabs_whitespaces(date, message_cyrillic)
     # Testing the length of the field.
     if len(date) == 10:
         pass
@@ -50,7 +45,7 @@ def date_validation(date):
         print('Error: In this field should be 10 characters.')
         date = input('Repeat date input in mm/dd/yyyy mode: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     # Testing the absence of alphabetical letters.
@@ -60,7 +55,7 @@ def date_validation(date):
         print('Error: No letters are allowed in this field!')
         date = input('Repeat input: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     # Testing the presence of two "/" characters.
@@ -70,7 +65,7 @@ def date_validation(date):
         print('Error: Check the presence of "/" characters in right places!')
         date = input('Repeat input: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     # Testing "mm" in mm/dd/yyyy
@@ -83,7 +78,7 @@ def date_validation(date):
         print('Error: The Month value should be in [01,...,12].')
         date = input('Repeat input: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     # Testing "dd" in mm/dd/yyyy
@@ -98,7 +93,7 @@ def date_validation(date):
         print('Error: The Day value should be in [01,...,31].')
         date = input('Repeat input: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     # Testing "yyyy" in mm/dd/yyyy
@@ -111,7 +106,7 @@ def date_validation(date):
         print('Error: The Year value should be in [2022,...,2035].')
         date = input('Repeat input: ')
         date = empty_date(date)
-        if date == datetime.datetime.now(pytz.timezone('Poland')) \
+        if date == datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y"):  # Getting current date.
             return date
     return date
@@ -120,7 +115,7 @@ def date_validation(date):
 def get_date(date):
     """Current date for Poland if argument == ''."""
     if date in ['']:
-        date = datetime.datetime.now(pytz.timezone('Poland')) \
+        date = datetime.datetime.now(datetime.UTC).astimezone() \
             .strftime("%m/%d/%Y")  # Getting current date.
     else:
         date = date_validation(date)  # Validation
