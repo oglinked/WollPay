@@ -3,8 +3,10 @@ small startup, written fully with Python programming language.
 
 WARNING: 
 If you going to run exactly wollpay.py in python environment, you should run 
-startpay.py program. It's importent tricky moment to avoid ****** ERROR.
+startpay.py program. It's importent tricky moment to avoid 
+"ImportError:(due to a circular import)".
 If you gonna run wollpay.exe instead, than simply run it!
+
 
 The functional inside wollpay.py is:
 1. To make a receipt for the new transaction;
