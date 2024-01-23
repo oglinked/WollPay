@@ -22,5 +22,4 @@ and run one of programmes:
 You can always return to the main menu or to EXIT the program.
 
 Have a good day!
-
 Good luck!
