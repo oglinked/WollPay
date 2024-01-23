@@ -1,7 +1,7 @@
 """wollpay.py (version 00.07 without balance.py) is programmes' Hub.
 To run wollpay.py you should run startpay.py program.
 
-Project wollpay.py is a CLI version of programmes' Hub for bank transactions' 
+The Project wollpay.py is a CLI version of programmes' Hub for bank transactions' 
 small startup, written fully with Python programming language.
 
 WARNING: 
@@ -23,9 +23,6 @@ run one of programmes:
 3. bankaccount.py
 4. csvedit.py
 You can always return to the main menu or EXIT the program.
-
-Have a good day!
-Good luck!
 """
 
 import os
