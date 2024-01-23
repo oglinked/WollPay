@@ -4,7 +4,7 @@ small startup, written fully with Python programming language.
 WARNING: 
 If you going to run exactly wollpay.py in python environment, you should run 
 startpay.py program. It's importent tricky moment to avoid 
-"ImportError:(due to a circular import)".
+"ImportError: (most likely due to a circular import)".
 If you gonna run wollpay.exe instead, than simply run it!
 
 
@@ -22,6 +22,6 @@ run one of programmes:
 4. csvedit.py
 You can always return to the main menu or EXIT the program.
 
-Have a good day!
+Have a good day! 
 Good luck!
 
