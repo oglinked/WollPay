@@ -1,4 +1,7 @@
-Project wollpay.py is a CLI version of programmes' Hub for bank transactions' 
+# wollpay.py
+# version 00.07 stable.
+
+The Project wollpay.py is a CLI version of programmes' Hub for bank transactions' 
 small startup, written fully with Python programming language.
 
 WARNING: 
