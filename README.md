@@ -12,14 +12,14 @@ The functional inside wollpay.py is:
 3. To append banks accounts data of the WollPay clients;
 4. To edit CSV files' database contents.
 
-After programm starts you choose the item from menu "What to do" 
-and run one of programmes:
+After programm starts you choose the item from menu "What to do" and 
+run one of programmes:
 1. receipt.py
 2. clientsbase.py
 3. bankaccount.py
 4. csvedit.py
-
-You can always return to the main menu or to EXIT the program.
+You can always return to the main menu or EXIT the program.
 
 Have a good day!
 Good luck!
+
