@@ -1,8 +1,9 @@
 # wollpay.py
 # version 00.07 stable.
 
-The Project wollpay.py is a CLI version of programmes' Hub for bank transactions' 
-small startup, written fully with Python programming language.
+The wollpay.py project is a software package for registering and accounting 
+for banking transactions. Designed to meet the needs of small private 
+banking businesses. Implemented entirely in the Python programming language.
 
 WARNING: 
 If you going to run exactly wollpay.py in python environment, you should run 
